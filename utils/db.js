@@ -1,5 +1,5 @@
-import mongodb from 'mongodb';
-import dotenv from 'dotenv';
+const mongodb = require('mongodb');
+const dotenv = require('dotenv');
 
 // Load environment variables from a .env file
 dotenv.config();
@@ -62,5 +62,5 @@ class DBClient {
   }
 }
 
-export const dbClient = new DBClient();
-export default dbClient;
+const dbClient = new DBClient();
+module.exports = dbClient;
