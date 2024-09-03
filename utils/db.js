@@ -1,64 +1,72 @@
-const mongodb = require('mongodb');
+const { MongoClient } = require('mongodb');
 const dotenv = require('dotenv');
 
 // Load environment variables from a .env file
 dotenv.config();
 
 /**
- * Represents a MongoDB client.
+ * Class DBClient
  */
 class DBClient {
   /**
-   * Creates a new DBClient instance.
+   * Constructor
    */
   constructor() {
     const host = process.env.DB_HOST || 'localhost';
-    const port = process.env.DB_PORT || 27017;
+    const port = process.env.DB_PORT || '27017';
     const database = process.env.DB_DATABASE || 'files_manager';
-    const dbURL = `mongodb://${host}:${port}/${database}`;
+    const url = `mongodb://${host}:${port}`;
 
-    this.client = new mongodb.MongoClient(dbURL, { useUnifiedTopology: true });
+    this.client = new MongoClient(url, { useUnifiedTopology: true });
     this.client.connect();
+    this.db = this.client.db(database);
   }
 
   /**
-   * Checks if this client's connection to the MongoDB server is active.
-   * @returns {boolean}
+   * Check if the connection is alive
+   *
+   * @returns {boolean} Returns true if the client is connected to the server,
+   *  otherwise returns false
    */
   isAlive() {
-    return this.client.topology && this.client.topology.isConnected();
+    return this.client.topology.isConnected();
+  }
+
+  async isAliveWithTimeout(timeout = 2000) {
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        console.error('MongoDB ping timed out');
+        resolve(false);
+      }, timeout);
+
+      this.client
+        .db()
+        .admin()
+        .ping()
+        .then(() => {
+          clearTimeout(timer);
+          resolve(true);
+        })
+        .catch((error) => {
+          clearTimeout(timer);
+          console.error('MongoDB ping failed:', error.message);
+          resolve(false);
+        });
+    });
   }
 
   /**
-   * Retrieves the number of users in the database.
-   * @returns {Promise<Number>}
+   * Count the number of documents in the collection users
    */
   async nbUsers() {
-    return this.client.db().collection('users').countDocuments();
+    return this.db.collection('users').countDocuments();
   }
 
   /**
-   * Retrieves the number of files in the database.
-   * @returns {Promise<Number>}
+   * Count the number of documents in the collection files
    */
   async nbFiles() {
-    return this.client.db().collection('files').countDocuments();
-  }
-
-  /**
-   * Retrieves a reference to the `users` collection.
-   * @returns {Promise<Collection>}
-   */
-  async usersCollection() {
-    return this.client.db().collection('users');
-  }
-
-  /**
-   * Retrieves a reference to the `files` collection.
-   * @returns {Promise<Collection>}
-   */
-  async filesCollection() {
-    return this.client.db().collection('files');
+    return this.db.collection('files').countDocuments();
   }
 }
 
