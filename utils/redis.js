@@ -36,7 +36,8 @@ class RedisClient {
   /**
    * Retrieves the value of a given key.
    * @param {String} key - The key of the item to retrieve.
-   * @returns {Promise<String | Object>} The value associated with the key, or null if an error occurs.
+   * @returns {Promise<String | Object>}:
+   * The value associated with the key, or null if an error occurs.
    */
   async get(key) {
     return promisify(this.client.GET).bind(this.client)(key);
