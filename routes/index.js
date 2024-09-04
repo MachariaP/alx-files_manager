@@ -10,7 +10,7 @@ import AuthController from '../controllers/AuthController';
 const router = Router();
 
 /**
- * Route to get the statistics of the application.
+ * Route to get the status of the application.
  * @name GET /status
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
@@ -27,21 +27,34 @@ router.get('/stats', async (req, res) => AppController.getStats(req, res));
 
 /**
  * Route to post new user.
+ * @name POST /users
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
  */
 router.post('/users', async (req, res) => UsersController.postNew(req, res));
-export default router;
 
 /**
- *
+ * Route to connect a user.
+ * @name GET /connect
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
  */
 router.get('/connect', async (req, res) => AuthController.getConnect(req, res));
 
 /**
- *
+ * Route to disconnect a user.
+ * @name GET /disconnect
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
  */
 router.get('/disconnect', async (req, res) => AuthController.getDisconnect(req, res));
 
 /**
- *
+ * Route to get the authenticated user's information.
+ * @name GET /users/me
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
  */
 router.get('/users/me', async (req, res) => UsersController.getMe(req, res));
+
+export default router;

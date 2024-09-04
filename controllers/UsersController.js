@@ -2,7 +2,15 @@ import sha1 from 'sha1';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
+/**
+ * Controller for user-related operations.
+ */
 class UsersController {
+  /**
+   * Creates a new user.
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
   static async postNew(req, res) {
     const { email, password } = req.body;
 
@@ -25,6 +33,11 @@ class UsersController {
     return res.status(201).json({ id: result.insertedId, email });
   }
 
+  /**
+   * Retrieves the authenticated user's information.
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
   static async getMe(req, res) {
     const token = req.headers['x-token'];
     if (!token) {

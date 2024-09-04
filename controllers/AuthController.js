@@ -3,7 +3,15 @@ import sha1 from 'sha1';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
+/**
+ * Controller for authentication-related operations.
+ */
 class AuthController {
+  /**
+   * Connects a user by generating an authentication token.
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
   static async getConnect(req, res) {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Basic ')) {
@@ -28,6 +36,11 @@ class AuthController {
     return res.status(200).json({ token });
   }
 
+  /**
+   * Disconnects a user by invalidating the authentication token.
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
   static async getDisconnect(req, res) {
     const token = req.headers['x-token'];
     if (!token) {
