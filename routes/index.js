@@ -5,6 +5,7 @@
 import { Router } from 'express';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
+import AuthController from '../controllers/AuthController';
 
 const router = Router();
 
@@ -29,3 +30,18 @@ router.get('/stats', async (req, res) => AppController.getStats(req, res));
  */
 router.post('/users', async (req, res) => UsersController.postNew(req, res));
 export default router;
+
+/**
+ *
+ */
+router.get('/connect', async (req, res) => AuthController.getConnect(req, res));
+
+/**
+ *
+ */
+router.get('/disconnect', async (req, res) => AuthController.getDisconnect(req, res));
+
+/**
+ *
+ */
+router.get('/users/me', async (req, res) => UsersController.getMe(req, res));
