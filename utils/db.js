@@ -1,8 +1,8 @@
-const { MongoClient } = require('mongodb');
-const dotenv = require('dotenv');
+#!/usr/bin/env node
 
-// Load environment variables from a .env file
-dotenv.config();
+// Implement a class DBClient that will be used to interact with the MongoDB database
+
+const { MongoClient } = require('mongodb');
 
 /**
  * Class DBClient
@@ -71,4 +71,5 @@ class DBClient {
 }
 
 const dbClient = new DBClient();
-module.exports = dbClient;
+
+export default dbClient;
