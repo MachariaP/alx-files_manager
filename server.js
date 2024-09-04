@@ -1,15 +1,13 @@
 // API Server configuration
 
 import express from 'express';
-import routes from './routes/index';
+import routes from './routes/index.js';
 
 const app = express();
-const port = process.env.PORT || 5000;
-
-// Load all routes
+app.use(express.json());
 app.use('/', routes);
 
-// Start the server
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
