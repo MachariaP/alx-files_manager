@@ -1,8 +1,8 @@
 /**
  * AppController representing the controller for the application.
  */
-import redisClient from '../utils/redis.js';
-import dbClient from '../utils/db.js';
+import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
 /**
  * AppController class to handle application status and statistics.
