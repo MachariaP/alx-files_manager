@@ -66,4 +66,20 @@ router.get('/users/me', async (req, res) => UsersController.getMe(req, res));
  */
 router.post('/files', async (req, res) => FilesController.postUpload(req, res));
 
+/**
+ * Route to retrieve a file document based on the ID.
+ * @name GET /files/:id
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
+router.get('/files/:id', async (req, res) => FilesController.getShow(req, res));
+
+/**
+ * Route to retrieve all users file documents for a specific parentId and with pagination.
+ * @name GET /files
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
+router.get('/files', async (req, res) => FilesController.getIndex(req, res));
+
 export default router;

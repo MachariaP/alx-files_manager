@@ -90,6 +90,66 @@ class FilesController {
       localPath,
     });
   }
+
+  /**
+   * Retrieves a file document based on the ID.
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  static async getShow(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const key = `auth_${token}`;
+    const userId = await redisClient.get(key);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const fileId = req.params.id;
+    const file = await dbClient.db.collection('files').findOne({ _id: dbClient.ObjectId(fileId), userId: dbClient.ObjectId(userId) });
+
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+
+    return res.status(200).json(file);
+  }
+
+  /**
+   * Retrieves all users file documents for a specific parentId and with pagination.
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  static async getIndex(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const key = `auth_${token}`;
+    const userId = await redisClient.get(key);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const parentId = req.query.parentId || 0;
+    const page = parseInt(req.query.page, 10) || 0;
+    const pageSize = 20;
+    const skip = page * pageSize;
+
+    const files = await dbClient.db.collection('files')
+      .aggregate([
+        { $match: { userId: dbClient.ObjectId(userId), parentId: parentId === 0 ? 0 : dbClient.ObjectId(parentId) } },
+        { $skip: skip },
+        { $limit: pageSize }
+      ])
+      .toArray();
+
+    return res.status(200).json(files);
+  }
 }
 
 export default FilesController;
