@@ -1,6 +1,6 @@
 import sha1 from 'sha1';
 import redisClient from '../utils/redis';
-import dbClient from '../utils/db';
+import { dbClient, ObjectId } from '../utils/db';
 
 /**
  * Controller for user-related operations.
